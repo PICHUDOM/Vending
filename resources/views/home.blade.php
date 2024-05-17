@@ -74,18 +74,46 @@
                                             @php
                                                 use App\Models\Machines;
                                                 $totalPriceSum = 0;
-                                                $startDate =  Machines::orderBy('created_at', 'desc')->value('created_at');
+                                                // Get the start date
+                                                $startDate = Machines::orderBy('created_at', 'desc')->value('created_at');
+                                                // Format the start date to include only month, day, and year
+                                                $startDate = $startDate->format('Y-m-d');
+
+                                                // Get the end date
                                                 $endDate = date('Y-m-d');
 
                                                 foreach ($resultsApi as $value) {
+                                                    // Check if the date falls within the range
                                                     if ($value->date >= $startDate && $value->date <= $endDate) {
                                                         $totalPriceSum += $value->total_price;
                                                     }
                                                 }
-
                                                 echo number_format($totalPriceSum, 2) . ' (៛)';
-                                            @endphp
 
+                                                
+                                                // Get the start date based on the created_at date of the machine (only month and year)
+                                                $machineCreatedAt = date('Y-m', strtotime(Machines::orderBy('created_at', 'asc')->value('created_at')));
+
+                                                // Get the end date (today)
+                                                $endDate = date('Y-m');
+
+                                                // Initialize an array to store total income for each month
+                                                $totalIncomeByMonth = [];
+
+                                                // Iterate over each transaction
+                                                foreach ($resultsApi as $value) {
+                                                    // Get the year and month of the transaction
+                                                    $transactionYearMonth = date('Y-m', strtotime($value->date));
+
+                                                    // If the transaction year and month exist in the array, add the transaction income to the total income for that month
+                                                    if (array_key_exists($transactionYearMonth, $totalIncomeByMonth)) {
+                                                        $totalIncomeByMonth[$transactionYearMonth] += $value->total_price;
+                                                    } else {
+                                                        // If the transaction year and month do not exist in the array, initialize the total income for that month
+                                                        $totalIncomeByMonth[$transactionYearMonth] = $value->total_price;
+                                                    }
+                                                }
+                                            @endphp
                                         </span>
                                     </div>
                                 </div>
@@ -323,7 +351,7 @@
         });
 
         // Display the total price sum in the designated element by its ID
-        document.getElementById('totalmoney').textContent = totalPriceSum.toFixed(2) + ' (៛)';
+        document.getElementById('totalmoney').textContent = totalPriceSum.toLocaleString('en-US', { maximumFractionDigits: 2 }) + '.00 (៛)';
             });
         });
 
@@ -335,4 +363,95 @@
 
     <script src="{{ asset('assets/vendor/chartsjs/Chart.min.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard-charts.js') }}"></script>
+
+
+
+    <script>
+        
+        var saleschart = document.getElementById("sales");
+    var myChart2 = new Chart(saleschart, {
+    type: "bar",
+    data: {
+        labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ],
+        datasets: [
+            {
+                label: "Income",
+                    data: [
+                        <?php 
+                            $months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+                            $incomeByMonth = array_values($totalIncomeByMonth);
+                            foreach($months as $month) {
+                                $index = (int) $month - 1;
+                                echo isset($incomeByMonth[$index]) ? $incomeByMonth[$index] : "null";
+                                echo ",";
+                            }
+                        ?>
+                    ],
+                    backgroundColor: "#0066CB",
+                    borderColor: "#0066C",
+                    borderWidth: 1,
+            },
+            {
+                label: "Expense",
+                data: [
+                    "200000",
+                    "220000",
+                    "250000",
+                    "300000",
+                    "280000",
+                    "300000",
+                    "320000",
+                    "350000",
+                    "300000",
+                    "380000",
+                    "400000",
+                    "420000",
+                ],
+                backgroundColor: "#FF6608",
+                borderColor: "#FF6608",
+                borderWidth: 1,
+            },
+        ],
+    },
+    options: {
+        animation: {
+            duration: 2000,
+            easing: "easeOutQuart",
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: "top",
+            },
+            title: {
+                display: true,
+                text: "Income vs Expense",
+                position: "left",
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        },
+        aspectRatio: 1,
+        maintainAspectRatio: false,
+    },
+});</script>
+
+
+
 @endsection

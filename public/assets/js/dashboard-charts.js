@@ -1,89 +1,89 @@
-var saleschart = document.getElementById("sales");
-var myChart2 = new Chart(saleschart, {
-    type: "bar",
-    data: {
-        labels: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ],
-        datasets: [
-            {
-                label: "Income",
-                data: [
-                    "280",
-                    "300",
-                    "400",
-                    "600",
-                    "450",
-                    "400",
-                    "500",
-                    "550",
-                    "450",
-                    "650",
-                    "950",
-                    "1000",
-                ],
-                backgroundColor: "#0066CB",
-                borderColor: "#0066C",
-                borderWidth: 1,
-            },
-            {
-                label: "Expense",
-                data: [
-                    "200",
-                    "220",
-                    "250",
-                    "300",
-                    "280",
-                    "300",
-                    "320",
-                    "350",
-                    "300",
-                    "380",
-                    "400",
-                    "420",
-                ],
-                backgroundColor: "#FF6608",
-                borderColor: "#FF6608",
-                borderWidth: 1,
-            },
-        ],
-    },
-    options: {
-        animation: {
-            duration: 2000,
-            easing: "easeOutQuart",
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: "top",
-            },
-            title: {
-                display: true,
-                text: "Income vs Expense",
-                position: "left",
-            },
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
-        },
-        aspectRatio: 1,
-        maintainAspectRatio: false,
-    },
-});
+// var saleschart = document.getElementById("sales");
+// var myChart2 = new Chart(saleschart, {
+//     type: "bar",
+//     data: {
+//         labels: [
+//             "Jan",
+//             "Feb",
+//             "Mar",
+//             "Apr",
+//             "May",
+//             "Jun",
+//             "Jul",
+//             "Aug",
+//             "Sep",
+//             "Oct",
+//             "Nov",
+//             "Dec",
+//         ],
+//         datasets: [
+//             {
+//                 label: "Income",
+//                 data: [
+//                     "280",
+//                     "300",
+//                     "400",
+//                     "600",
+//                     "450",
+//                     "400",
+//                     "500",
+//                     "550",
+//                     "450",
+//                     "650",
+//                     "950",
+//                     "1000",
+//                 ],
+//                 backgroundColor: "#0066CB",
+//                 borderColor: "#0066C",
+//                 borderWidth: 1,
+//             },
+//             {
+//                 label: "Expense",
+//                 data: [
+//                     "200",
+//                     "220",
+//                     "250",
+//                     "300",
+//                     "280",
+//                     "300",
+//                     "320",
+//                     "350",
+//                     "300",
+//                     "380",
+//                     "400",
+//                     "420",
+//                 ],
+//                 backgroundColor: "#FF6608",
+//                 borderColor: "#FF6608",
+//                 borderWidth: 1,
+//             },
+//         ],
+//     },
+//     options: {
+//         animation: {
+//             duration: 2000,
+//             easing: "easeOutQuart",
+//         },
+//         plugins: {
+//             legend: {
+//                 display: true,
+//                 position: "top",
+//             },
+//             title: {
+//                 display: true,
+//                 text: "Income vs Expense",
+//                 position: "left",
+//             },
+//         },
+//         scales: {
+//             y: {
+//                 beginAtZero: true,
+//             },
+//         },
+//         aspectRatio: 1,
+//         maintainAspectRatio: false,
+//     },
+// });
 //Piechart
 var pieChartElement = document.getElementById("pieChart");
 var myPieChart;

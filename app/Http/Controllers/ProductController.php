@@ -55,7 +55,7 @@ class ProductController extends Controller
     {
         $validatedData = $request->validate(
             [
-                'm_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'p_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'p_name' => 'required|string',
                 'expiry_date',
                 'specific_code',
@@ -70,7 +70,7 @@ class ProductController extends Controller
         if ($request->hasFile('p_image')) {
             $image = $request->file('p_image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/images', $imageName);
+            $image->move('public/images', $imageName);
             $validatedData['p_image'] = 'images/' . $imageName; // Store the path relative to the public directory
         }
         Product::create($validatedData);
@@ -116,13 +116,13 @@ class ProductController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'p_name' => 'required|string',
-            'expiry_date' => 'required|date',
+            'expiry_date' ,
             'specific_code',
             'id_pro_categories' => 'required|int',
 
         ], [
             'p_name.required' => 'Please input Product Name',
-            'expiry_date.required' => 'Please input Expiry Date',
+            'expiry_date' => 'Please input Expiry Date',
             // 'specific_code.required' => 'Please input Specific Code',
             'id_pro_categories.required' => 'Please select product category',
 
@@ -132,11 +132,24 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         $product->p_name = $validatedData['p_name'];
-        $product->expiry_date = $validatedData['expiry_date'];
+        // $product->expiry_date = $validatedData['expiry_date'];
         // $product->specific_code = $validatedData['specific_code'];
         $product->id_pro_categories = $validatedData['id_pro_categories'];
 
-        $product->update();
+        // Handle the image upload
+    if ($request->hasFile('p_image')) {
+        // Get the file with the original name
+        $image = $request->file('p_image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+
+        // Store the image in the 'public/images' directory
+        $image->move('public/images', $imageName);
+
+        // Set the p_image attribute to the relative path
+        $product->p_image = 'images/' . $imageName;
+    }
+
+        $product->save();
 
         return redirect('/products')->with('flash_message', 'Product Updated Successfully');
     }
